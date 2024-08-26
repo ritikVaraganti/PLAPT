@@ -32,7 +32,7 @@ def main():
     args = parser.parse_args()
 
     plapt = Plapt()
-    results = plapt.predict_affinity(args.sequences[0], args.smiles)
+    results = plapt.predict_affinity(args.target[0], args.smiles)
 
     args.output, output_format = determine_format_and_update_filename(args.output, args.format)
 
