@@ -24,7 +24,7 @@ def determine_format_and_update_filename(output_arg, format_arg):
 
 def main():
     parser = argparse.ArgumentParser(description="Predict affinity using Plapt.")
-    parser.add_argument("-s", "--sequences", nargs="+", required=True, help="List of sequences")
+    parser.add_argument("-t", "--target", nargs="+", required=True, help="The target protein sequence")
     parser.add_argument("-m", "--smiles", nargs="+", required=True, help="List of SMILES strings")
     parser.add_argument("-o", "--output", help="Optional output file path")
     parser.add_argument("-f", "--format", choices=["json", "csv"], help="Optional output file format; required if output is specified without an extension")
@@ -32,7 +32,7 @@ def main():
     args = parser.parse_args()
 
     plapt = Plapt()
-    results = plapt.predict_affinity(args.sequences, args.smiles)
+    results = plapt.predict_affinity(args.sequences[0], args.smiles)
 
     args.output, output_format = determine_format_and_update_filename(args.output, args.format)
 
