@@ -1,49 +1,70 @@
 import argparse
-import json
-import csv
-import os
+import sys
+from typing import List
 from plapt import Plapt
+import json 
+import csv
+import warnings
+warnings.filterwarnings("ignore")
 
-def write_json(results, filename):
-    with open(filename, 'w') as json_file:
-        json.dump(results, json_file)
+def read_file(file_path: str) -> List[str]:
+    with open(file_path, 'r') as f:
+        return [line.strip() for line in f if line.strip()]
 
-def write_csv(results, filename):
-    with open(filename, 'w', newline='') as csv_file:
-        writer = csv.writer(csv_file)
+def parse_arguments():
+    parser = argparse.ArgumentParser(description="PLAPT: Protein-Ligand Affinity Prediction Tool")
+    parser.add_argument('-p', '--proteins', nargs='+', help='Protein sequence(s) or path to a file containing protein sequences')
+    parser.add_argument('-m', '--molecules', nargs='+', required=True, help='SMILES string(s) or path to a file containing SMILES strings')
+    parser.add_argument('-b', '--batch-size', type=int, default=4, help='Batch size for predictions (default: 4)')
+    parser.add_argument('-o', '--output', type=str, default='stdout', help='Output file path (default: stdout)')
+    return parser.parse_args()
+
+def process_input(input_data: List[str]) -> List[str]:
+    if len(input_data) == 1 and input_data[0].endswith('.txt'):
+        return read_file(input_data[0])
+    return input_data
+
+def write_output(results: List[dict], output_path: str):
+    if output_path == 'stdout':
         for result in results:
-            writer.writerow([result])
-
-def determine_format_and_update_filename(output_arg, format_arg):
-    if output_arg:
-        _, ext = os.path.splitext(output_arg)
-        if ext not in [".csv", ".json"]:
-            output_arg += f".{format_arg or 'json'}"
-        return output_arg, (format_arg or "json" if not ext else ext[1:])
-    return None, "json"
+            print(f"neg_log10_affinity_M: {result['neg_log10_affinity_M']:.4f}, affinity_uM: {result['affinity_uM']:.4f}")
+    else:
+        if output_path.endswith('.json'):
+            with open(output_path, 'w') as f:
+                json.dump(results, f, indent=4)
+        elif output_path.endswith('.csv'):
+            with open(output_path, 'w', newline='') as f:
+                writer = csv.writer(f)
+                writer.writerow(['neg_log10_affinity_M', 'affinity_uM'])  # header row
+                for result in results:
+                    writer.writerow([result['neg_log10_affinity_M'], result['affinity_uM']])
+        else:
+            with open(output_path, 'w') as f:
+                for result in results:
+                    f.write(f"neg_log10_affinity_M: {result['neg_log10_affinity_M']:.4f}, affinity_uM: {result['affinity_uM']:.4f}\n")
 
 def main():
-    parser = argparse.ArgumentParser(description="Predict affinity using Plapt.")
-    parser.add_argument("-t", "--target", nargs="+", required=True, help="The target protein sequence")
-    parser.add_argument("-m", "--smiles", nargs="+", required=True, help="List of SMILES strings")
-    parser.add_argument("-o", "--output", help="Optional output file path")
-    parser.add_argument("-f", "--format", choices=["json", "csv"], help="Optional output file format; required if output is specified without an extension")
-
-    args = parser.parse_args()
-
+    args = parse_arguments()
+    
+    molecules = process_input(args.molecules)
+    
     plapt = Plapt()
-    results = plapt.predict_affinity(args.target[0], args.smiles)
-
-    args.output, output_format = determine_format_and_update_filename(args.output, args.format)
-
-    if args.output:
-        if output_format == "json":
-            write_json(results, args.output)
-        elif output_format == "csv":
-            write_csv(results, args.output)
-        print(f"Output written to {args.output}")
+    
+    if args.proteins:
+        proteins = process_input(args.proteins)
+        
+        if len(proteins) == 1:
+            results = plapt.score_candidates(proteins[0], molecules, batch_size=args.batch_size)
+        elif len(proteins) == len(molecules):
+            results = plapt.predict_affinity(proteins, molecules, batch_size=args.batch_size)
+        else:
+            print("Error: The number of proteins must be either 1 or equal to the number of molecules.")
+            sys.exit(1)
     else:
-        print(results)
+        print("Error: At least one protein sequence must be provided.")
+        sys.exit(1)
+    
+    write_output(results, args.output)
 
 if __name__ == "__main__":
     main()
