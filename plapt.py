@@ -6,7 +6,7 @@ import numpy as np
 from typing import List, Dict, Union
 
 class PredictionModule:
-    def __init__(self, model_path: str = "models/affinity_predictor0734-seed2101.onnx"):
+    def __init__(self, model_path: str = "models/affinity_predictor.onnx"):
         self.session = onnxruntime.InferenceSession(model_path)
         self.input_name = self.session.get_inputs()[0].name
         self.mean = 6.51286529169358
@@ -28,7 +28,7 @@ class PredictionModule:
         return affinities
 
 class Plapt:
-    def __init__(self, prediction_module_path: str = "models/affinity_predictor0734-seed2101.onnx", device: str = 'cuda'):
+    def __init__(self, prediction_module_path: str = "models/affinity_predictor.onnx", device: str = 'cuda'):
         self.device = torch.device(device if torch.cuda.is_available() else 'cpu')
         
         self.prot_tokenizer = BertTokenizer.from_pretrained("Rostlab/prot_bert", do_lower_case=False)
