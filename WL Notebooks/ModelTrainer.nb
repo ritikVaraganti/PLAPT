@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       161,          7]
-NotebookDataLength[     24659,        552]
-NotebookOptionsPosition[     23529,        528]
-NotebookOutlinePosition[     23930,        544]
-CellTagsIndexPosition[     23887,        541]
+NotebookDataLength[     19657,        432]
+NotebookOptionsPosition[     18408,        405]
+NotebookOutlinePosition[     18803,        421]
+CellTagsIndexPosition[     18760,        418]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -27,6 +27,8 @@ path to tensor_dataset100k.json below:\
   3.913518012089275*^9}},ExpressionUUID->"56e6bade-f9e6-4847-9e8d-\
 a91b559c90cb"],
 
+Cell[CellGroupData[{
+
 Cell[BoxData[
  RowBox[{"dataRaw", " ", "=", " ", 
   RowBox[{"Import", "[", 
@@ -37,9 +39,21 @@ Cell[BoxData[
       "\"\<data\>\"", ",", " ", "\"\<tensor_dataset100k.json\>\""}], "}"}], 
     "]"}], "]"}]}]], "Code",
  CellChangeTimes->{
-  3.9135177768847523`*^9, {3.9135179855911765`*^9, 
-   3.9135179866657343`*^9}},ExpressionUUID->"2969545c-c197-46b9-a7b4-\
-f5f8c3476d06"],
+  3.9135177768847523`*^9, {3.9135179855911765`*^9, 3.9135179866657343`*^9}, 
+   3.9344962283820543`*^9},
+ CellLabel->"In[1]:=",ExpressionUUID->"2969545c-c197-46b9-a7b4-f5f8c3476d06"],
+
+Cell[BoxData[
+ TemplateBox[<|"shortenedBoxes" -> TagBox[
+     RowBox[{"{", 
+       TemplateBox[{"1"}, "OutputSizeLimit`Skeleton"], "}"}], Short[#, 8]& ], 
+   "line" -> 1, "sessionID" -> 25406097469102475834, "byteCount" -> 
+   4415200080, "size" -> 8, "stored" -> False, "expr" -> Missing["NotStored"],
+    "wrap" -> OutputSizeLimit`Defer, "version" -> 1|>,
+  "OutputSizeLimitTemplate"]], "Output",
+ CellChangeTimes->{3.934496386162697*^9},
+ CellLabel->"Out[1]=",ExpressionUUID->"72ad87c7-84a9-4fd5-b8c0-f22be6242428"]
+}, Open  ]],
 
 Cell["Load other data and get it in the right format.", "Text",
  CellChangeTimes->{{3.9135177831277466`*^9, 
@@ -76,67 +90,6 @@ Cell[BoxData[{
          "]"}], ")"}], " ", "&"}], " ", "/@", " ", "data"}], "]"}]}], ";"}], 
   "\n"}], "\n", 
  RowBox[{
-  RowBox[{"benchmarkTest2016290Inputs", "=", 
-   RowBox[{"Import", "[", 
-    RowBox[{"FileNameJoin", "[", 
-     RowBox[{"{", 
-      RowBox[{
-       RowBox[{"ParentDirectory", "[", 
-        RowBox[{"NotebookDirectory", "[", "]"}], "]"}], ",", "\"\<data\>\"", 
-       ",", "\"\<Test2016_290_features.json\>\""}], "}"}], "]"}], "]"}]}], 
-  ";"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{"benchmarkTest2016290Outputs", "=", 
-   RowBox[{"Import", "[", 
-    RowBox[{"FileNameJoin", "[", 
-     RowBox[{"{", 
-      RowBox[{
-       RowBox[{"ParentDirectory", "[", 
-        RowBox[{"NotebookDirectory", "[", "]"}], "]"}], ",", "\"\<data\>\"", 
-       ",", "\"\<Test2016_290_pKd.json\>\""}], "}"}], "]"}], "]"}]}], 
-  ";"}], "\n", 
- RowBox[{
-  RowBox[{"benchmarkCSARHiQ36Inputs", "=", 
-   RowBox[{"Import", "[", 
-    RowBox[{"FileNameJoin", "[", 
-     RowBox[{"{", 
-      RowBox[{
-       RowBox[{"ParentDirectory", "[", 
-        RowBox[{"NotebookDirectory", "[", "]"}], "]"}], ",", "\"\<data\>\"", 
-       ",", "\"\<CSAR-HiQ_36_features.json\>\""}], "}"}], "]"}], "]"}]}], 
-  ";"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{"benchmarkCSARHiQ36Outputs", "=", 
-   RowBox[{"Import", "[", 
-    RowBox[{"FileNameJoin", "[", 
-     RowBox[{"{", 
-      RowBox[{
-       RowBox[{"ParentDirectory", "[", 
-        RowBox[{"NotebookDirectory", "[", "]"}], "]"}], ",", "\"\<data\>\"", 
-       ",", "\"\<CSAR-HiQ_36_pKd.json\>\""}], "}"}], "]"}], "]"}]}], 
-  ";"}], "\n", 
- RowBox[{
-  RowBox[{"benchmarkCSARHiQ51Inputs", "=", 
-   RowBox[{"Import", "[", 
-    RowBox[{"FileNameJoin", "[", 
-     RowBox[{"{", 
-      RowBox[{
-       RowBox[{"ParentDirectory", "[", 
-        RowBox[{"NotebookDirectory", "[", "]"}], "]"}], ",", "\"\<data\>\"", 
-       ",", "\"\<CSAR-HiQ_51_features.json\>\""}], "}"}], "]"}], "]"}]}], 
-  ";"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{
-   RowBox[{"benchmarkCSARHiQ51Outputs", "=", 
-    RowBox[{"Import", "[", 
-     RowBox[{"FileNameJoin", "[", 
-      RowBox[{"{", 
-       RowBox[{
-        RowBox[{"ParentDirectory", "[", 
-         RowBox[{"NotebookDirectory", "[", "]"}], "]"}], ",", "\"\<data\>\"", 
-        ",", "\"\<CSAR-HiQ_51_pKd.json\>\""}], "}"}], "]"}], "]"}]}], ";"}], 
-  "\n"}], "\n", 
- RowBox[{
   RowBox[{"scalingParams", " ", "=", "\n", "  ", 
    RowBox[{"<|", 
     RowBox[{
@@ -156,14 +109,16 @@ Cell[BoxData[{
     RowBox[{
      RowBox[{"normalizedAffinity", "*", 
       RowBox[{"params", "[", "\"\<scale\>\"", "]"}]}], " ", "+", " ", 
-     RowBox[{"params", "[", "\"\<mean\>\"", "]"}]}], ")"}]}], ";"}]}], "Code",
+     RowBox[{"params", "[", "\"\<mean\>\"", "]"}]}], ")"}]}], ";"}]}], "Code",\
+
  CellChangeTimes->{{3.9134037140272093`*^9, 3.9134037276691084`*^9}, {
    3.9134038184644055`*^9, 3.9134038197289333`*^9}, {3.913404021391974*^9, 
    3.913404039647859*^9}, 3.913430133681713*^9, {3.913431622670512*^9, 
    3.9134316479822645`*^9}, {3.913431691531904*^9, 3.9134317178885727`*^9}, {
    3.9134368292882843`*^9, 3.9134368345331*^9}, {3.9135177147493486`*^9, 
-   3.9135177373411055`*^9}, {3.9135177676725845`*^9, 
-   3.913517773211213*^9}},ExpressionUUID->"18e9cfd3-f61e-43b4-92e0-\
+   3.9135177373411055`*^9}, {3.9135177676725845`*^9, 3.913517773211213*^9}, {
+   3.9344962870725927`*^9, 3.934496288676106*^9}, 3.934498047191592*^9, 
+   3.934498696289192*^9},ExpressionUUID->"18e9cfd3-f61e-43b4-92e0-\
 1f37c964dd85"],
 
 Cell["End-to-end training and benchmarking function", "Text",
@@ -173,7 +128,9 @@ Cell["End-to-end training and benchmarking function", "Text",
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"TrainPLAPT", "[", "seed_Integer", "]"}], ":=", 
+  RowBox[{"TrainPLAPT", "[", 
+   RowBox[{"seed_Integer", ",", " ", 
+    RowBox[{"device_String", ":", "\"\<CPU\>\""}]}], "]"}], ":=", 
   RowBox[{"Module", "[", "\[IndentingNewLine]", "\t", 
    RowBox[{
     RowBox[{"{", "\[IndentingNewLine]", "\t", 
@@ -188,12 +145,6 @@ Cell[BoxData[
       "\[IndentingNewLine]", "\t", "experimentalTest", ",", 
       "\[IndentingNewLine]", "\t", "predictedTrain", ",", 
       "\[IndentingNewLine]", "\t", "experimentalTrain", ",", 
-      "\[IndentingNewLine]", "\t", "predictedTest2016290", ",", 
-      "\[IndentingNewLine]", "\t", "experimentalTest2016290", ",", 
-      "\[IndentingNewLine]", "\t", "predictedCSARHiQ36", ",", 
-      "\[IndentingNewLine]", "\t", "experimentalCSARHiQ36", ",", 
-      "\[IndentingNewLine]", "\t", "predictedCSARHiQ51", ",", 
-      "\[IndentingNewLine]", "\t", "experimentalCSARHiQ51", ",", 
       "\[IndentingNewLine]", "\t", "\[IndentingNewLine]", "\t", "RTest", ",", 
       "\[IndentingNewLine]", "\t", "RTrain", ",", "\[IndentingNewLine]", "\t",
        "RTest2016290", ",", "\[IndentingNewLine]", "\t", "RCSARHiQ36", ",", 
@@ -292,7 +243,8 @@ Cell[BoxData[
             RowBox[{"\"\<Normalize\>\"", " ", "->", " ", 
              RowBox[{"\"\<Linear1\>\"", " ", "->", " ", 
               RowBox[{"\"\<Ramp1\>\"", " ", "->", " ", 
-               RowBox[{"\"\<Dropout1\>\"", " ", "->", "\n", "              ", 
+               RowBox[{
+               "\"\<Dropout1\>\"", " ", "->", "\n", "              ", 
                 RowBox[{"\"\<Linear2\>\"", " ", "->", " ", 
                  RowBox[{"\"\<Ramp2\>\"", " ", "->", " ", 
                   RowBox[{"\"\<FinalLinear\>\"", " ", "->", " ", 
@@ -361,39 +313,6 @@ Cell[BoxData[
           RowBox[{"#", ",", "scalingParams"}], "]"}], "&"}], "/@", 
         "trainOutputs"}], "]"}]}], ";", "\[IndentingNewLine]", "\t", 
      "\[IndentingNewLine]", "\t", 
-     RowBox[{"predictedTest2016290", "=", 
-      RowBox[{"Flatten", "[", 
-       RowBox[{
-        RowBox[{
-         RowBox[{"Denormalize", "[", 
-          RowBox[{"#", ",", "scalingParams"}], "]"}], "&"}], "/@", 
-        RowBox[{"trainedNet", "[", "benchmarkTest2016290Inputs", "]"}]}], 
-       "]"}]}], ";", "\n", "\t", 
-     RowBox[{"experimentalTest2016290", "=", 
-      RowBox[{"Flatten", "[", "benchmarkTest2016290Outputs", "]"}]}], ";", 
-     "\n", "\t", "\[IndentingNewLine]", "\t", 
-     RowBox[{"predictedCSARHiQ36", "=", 
-      RowBox[{"Flatten", "[", 
-       RowBox[{
-        RowBox[{
-         RowBox[{"Denormalize", "[", 
-          RowBox[{"#", ",", "scalingParams"}], "]"}], "&"}], "/@", 
-        RowBox[{"trainedNet", "[", "benchmarkCSARHiQ36Inputs", "]"}]}], 
-       "]"}]}], ";", "\n", "\t", 
-     RowBox[{"experimentalCSARHiQ36", "=", 
-      RowBox[{"Flatten", "[", "benchmarkCSARHiQ36Outputs", "]"}]}], ";", 
-     "\[IndentingNewLine]", "\t", "\n", "\t", 
-     RowBox[{"predictedCSARHiQ51", "=", 
-      RowBox[{"Flatten", "[", 
-       RowBox[{
-        RowBox[{
-         RowBox[{"Denormalize", "[", 
-          RowBox[{"#", ",", "scalingParams"}], "]"}], "&"}], "/@", 
-        RowBox[{"trainedNet", "[", "benchmarkCSARHiQ51Inputs", "]"}]}], 
-       "]"}]}], ";", "\n", "\t", 
-     RowBox[{"experimentalCSARHiQ51", "=", 
-      RowBox[{"Flatten", "[", "benchmarkCSARHiQ51Outputs", "]"}]}], ";", 
-     "\[IndentingNewLine]", "\t", "\[IndentingNewLine]", "\t", 
      RowBox[{"RTest", "=", 
       RowBox[{"Correlation", "[", 
        RowBox[{"predictedTest", ",", "experimentalTest"}], "]"}]}], ";", 
@@ -401,63 +320,21 @@ Cell[BoxData[
      RowBox[{"RTrain", "=", 
       RowBox[{"Correlation", "[", 
        RowBox[{"predictedTrain", ",", "experimentalTrain"}], "]"}]}], ";", 
-     "\[IndentingNewLine]", "\t", 
-     RowBox[{"RTest2016290", "=", 
-      RowBox[{"Correlation", "[", 
-       RowBox[{"predictedTest2016290", ",", "experimentalTest2016290"}], 
-       "]"}]}], ";", "\[IndentingNewLine]", "\t", 
-     RowBox[{"RCSARHiQ36", "=", 
-      RowBox[{"Correlation", "[", 
-       RowBox[{"predictedCSARHiQ36", ",", "experimentalCSARHiQ36"}], "]"}]}], 
-     ";", "\[IndentingNewLine]", "\t", 
-     RowBox[{"RCSARHiQ51", "=", 
-      RowBox[{"Correlation", "[", 
-       RowBox[{"predictedCSARHiQ51", ",", "experimentalCSARHiQ51"}], "]"}]}], 
-     ";", "\[IndentingNewLine]", "\t", "\[IndentingNewLine]", "\t", 
+     "\[IndentingNewLine]", "\t", "\[IndentingNewLine]", "\t", 
      RowBox[{"Export", "[", 
       RowBox[{
        RowBox[{"FileNameJoin", "[", 
         RowBox[{"{", 
          RowBox[{
          "$UserDocumentsDirectory", ",", "\"\<WELP-PLAPT\>\"", ",", 
-          "\"\<models\>\"", ",", 
-          RowBox[{
-           RowBox[{
-            RowBox[{
-             RowBox[{"\"\<affinity_predictor\>\"", "<>", 
-              RowBox[{"StringJoin", "[", 
-               RowBox[{
-                RowBox[{"StringPart", "[", 
-                 RowBox[{"#", ",", "1"}], "]"}], ",", 
-                RowBox[{"StringPart", "[", 
-                 RowBox[{"#", ",", 
-                  RowBox[{"3", ";;"}]}], "]"}]}], "]"}]}], "&"}], "@", 
-            RowBox[{"ToString", "[", 
-             RowBox[{"Round", "[", 
-              RowBox[{
-               RowBox[{
-                RowBox[{"(", 
-                 RowBox[{
-                 "RTest2016290", "+", "RCSARHiQ36", "+", "RCSARHiQ51"}], 
-                 ")"}], "/", "3"}], ",", "0.001"}], "]"}], "]"}]}], "<>", 
-           "\"\<-seed\>\"", "<>", 
-           RowBox[{"ToString", "@", "seed"}], "<>", "\"\<.onnx\>\""}]}], 
-         "}"}], "]"}], ",", "trainedNet"}], "]"}], ";", "\[IndentingNewLine]",
-      "\t", 
+          "\"\<models\>\"", ",", "\"\<affinity_predictor.onnx\>\""}], "}"}], 
+        "]"}], ",", "trainedNet"}], "]"}], ";", "\[IndentingNewLine]", "\t", 
      RowBox[{"seed", "->", 
       RowBox[{"<|", 
        RowBox[{
-        RowBox[{"\"\<RTest\>\"", "->", "RTest"}], ",", 
-        RowBox[{"\"\<RTrain\>\"", "->", "RTrain"}], ",", 
-        RowBox[{"\"\<RTest2016290\>\"", "->", "RTest2016290"}], ",", 
-        RowBox[{"\"\<RCSARHiQ36\>\"", "->", "RCSARHiQ36"}], ",", 
-        RowBox[{"\"\<RCSARHiQ51\>\"", "->", "RCSARHiQ51"}], ",", 
-        RowBox[{"\"\<Avg\>\"", "->", 
-         RowBox[{
-          RowBox[{"(", 
-           RowBox[{"RTest2016290", "+", "RCSARHiQ36", "+", "RCSARHiQ51"}], 
-           ")"}], "/", "3"}]}]}], "|>"}]}]}]}], "\[IndentingNewLine]", 
-   "]"}]}]], "Code",
+        RowBox[{"\"\<RTest\>\"", "->", "RTest"}], ",", " ", 
+        RowBox[{"\"\<RTrain\>\"", "->", "RTrain"}]}], "|>"}]}]}]}], 
+   "\[IndentingNewLine]", "]"}]}]], "Code",
  CellChangeTimes->{{3.913403688343856*^9, 3.9134037011649704`*^9}, {
    3.913403741153164*^9, 3.9134039917973843`*^9}, {3.9134040689699974`*^9, 
    3.9134040930917797`*^9}, {3.9134042791889195`*^9, 3.913404295998066*^9}, {
@@ -489,8 +366,10 @@ Cell[BoxData[
    3.91343952245516*^9}, {3.9134397363300495`*^9, 3.9134397393577347`*^9}, {
    3.9134398102973914`*^9, 3.9134398355137763`*^9}, {3.91343998516717*^9, 
    3.9134399904986534`*^9}, {3.913517400051921*^9, 3.9135174202766123`*^9}, {
-   3.9135174673741198`*^9, 3.913517501953392*^9}},
- CellLabel->"In[14]:=",ExpressionUUID->"68cb701b-960c-45bb-abdd-8dddbd0dc606"],
+   3.9135174673741198`*^9, 3.913517501953392*^9}, {3.93449633219141*^9, 
+   3.934496376116477*^9}, 3.9344976496731787`*^9, {3.934498023311221*^9, 
+   3.934498102061755*^9}, {3.934498705249745*^9, 3.934498758906069*^9}},
+ CellLabel->"In[9]:=",ExpressionUUID->"68cb701b-960c-45bb-abdd-8dddbd0dc606"],
 
 Cell["\<\
 Outputs R (Pearsons correlation coefficient) values for test, train, \
@@ -503,32 +382,30 @@ ac5f6b4b6aca"],
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"TrainPLAPT", "[", "2101", "]"}]], "Input",
+ RowBox[{"TrainPLAPT", "[", 
+  RowBox[{"2101", ",", "\"\<GPU\>\""}], "]"}]], "Input",
  CellChangeTimes->{{3.913437019160262*^9, 3.913437024376022*^9}, 
    3.91343799212883*^9, 3.9134380449491844`*^9, {3.9135174479256525`*^9, 
-   3.9135174515320873`*^9}},
- CellLabel->"In[15]:=",ExpressionUUID->"5d1a53c1-0835-42a1-b392-fe09a86ce742"],
+   3.9135174515320873`*^9}, {3.934498762768224*^9, 3.934498770526676*^9}},
+ CellLabel->"In[10]:=",ExpressionUUID->"5d1a53c1-0835-42a1-b392-fe09a86ce742"],
 
 Cell[BoxData[
  RowBox[{"2101", "\[Rule]", 
   RowBox[{"\[LeftAssociation]", 
    RowBox[{
-    RowBox[{"\<\"RTest\"\>", "\[Rule]", "0.6821684172680138`"}], ",", 
-    RowBox[{"\<\"RTrain\"\>", "\[Rule]", "0.8846352205903706`"}], ",", 
-    RowBox[{"\<\"RTest2016290\"\>", "\[Rule]", "0.8448983224113938`"}], ",", 
-    RowBox[{"\<\"RCSARHiQ36\"\>", "\[Rule]", "0.7314854745260991`"}], ",", 
-    RowBox[{"\<\"RCSARHiQ51\"\>", "\[Rule]", "0.6248911254681437`"}], ",", 
-    RowBox[{"\<\"Avg\"\>", "\[Rule]", "0.7337583074685456`"}]}], 
+    RowBox[{"\<\"RTest\"\>", "\[Rule]", "0.6821684172680139`"}], ",", 
+    RowBox[{"\<\"RTrain\"\>", "\[Rule]", "0.8846352205903706`"}]}], 
    "\[RightAssociation]"}]}]], "Output",
  CellChangeTimes->{3.9134381226903205`*^9, 3.913438228955121*^9, 
   3.913438583094203*^9, 3.913439466488468*^9, 3.913439655770928*^9, 
-  3.913439823773531*^9, 3.913439936943373*^9, 3.913517645562643*^9},
- CellLabel->"Out[15]=",ExpressionUUID->"2f3409be-43aa-4d69-8d8b-27e75effe5b3"]
+  3.913439823773531*^9, 3.913439936943373*^9, 3.913517645562643*^9, 
+  3.9344981578091917`*^9},
+ CellLabel->"Out[8]=",ExpressionUUID->"1befdf2c-0f12-4f0f-8352-47012ff84d32"]
 }, Open  ]]
 },
-WindowSize->{715.5, 714},
-WindowMargins->{{0.75, Automatic}, {Automatic, 6}},
-FrontEndVersion->"13.3 for Microsoft Windows (64-bit) (July 27, 2023)",
+WindowSize->{1008, 714},
+WindowMargins->{{240.75, 191.25}, {Automatic, 35.25}},
+FrontEndVersion->"14.1 for Linux x86 (64-bit) (July 16, 2024)",
 StyleDefinitions->"Default.nb",
 ExpressionUUID->"e85e40d9-9053-4028-bacd-a4c5287257f8"
 ]
@@ -543,16 +420,19 @@ CellTagsIndex->{}
 *)
 (*NotebookFileOutline
 Notebook[{
-Cell[561, 20, 316, 7, 58, "Text",ExpressionUUID->"56e6bade-f9e6-4847-9e8d-a91b559c90cb"],
-Cell[880, 29, 479, 12, 50, "Code",ExpressionUUID->"2969545c-c197-46b9-a7b4-f5f8c3476d06"],
-Cell[1362, 43, 193, 3, 35, "Text",ExpressionUUID->"650e8f09-a28c-4b3a-8ff5-0be658471986"],
-Cell[1558, 48, 4523, 118, 314, "Code",ExpressionUUID->"18e9cfd3-f61e-43b4-92e0-1f37c964dd85"],
-Cell[6084, 168, 191, 3, 35, "Text",ExpressionUUID->"39769539-e2e0-47f3-b3da-351b37d5c8ee"],
-Cell[6278, 173, 15764, 319, 1614, "Code",ExpressionUUID->"68cb701b-960c-45bb-abdd-8dddbd0dc606"],
-Cell[22045, 494, 276, 6, 58, "Text",ExpressionUUID->"af725184-d64d-418e-af82-ac5f6b4b6aca"],
+Cell[561, 20, 316, 7, 33, "Text",ExpressionUUID->"56e6bade-f9e6-4847-9e8d-a91b559c90cb"],
 Cell[CellGroupData[{
-Cell[22346, 504, 314, 5, 28, "Input",ExpressionUUID->"5d1a53c1-0835-42a1-b392-fe09a86ce742"],
-Cell[22663, 511, 850, 14, 52, "Output",ExpressionUUID->"2f3409be-43aa-4d69-8d8b-27e75effe5b3"]
+Cell[902, 31, 524, 12, 52, "Code",ExpressionUUID->"2969545c-c197-46b9-a7b4-f5f8c3476d06"],
+Cell[1429, 45, 518, 9, 80, "Output",ExpressionUUID->"72ad87c7-84a9-4fd5-b8c0-f22be6242428"]
+}, Open  ]],
+Cell[1962, 57, 193, 3, 33, "Text",ExpressionUUID->"650e8f09-a28c-4b3a-8ff5-0be658471986"],
+Cell[2158, 62, 2401, 59, 208, "Code",ExpressionUUID->"18e9cfd3-f61e-43b4-92e0-1f37c964dd85"],
+Cell[4562, 123, 191, 3, 33, "Text",ExpressionUUID->"39769539-e2e0-47f3-b3da-351b37d5c8ee"],
+Cell[4756, 128, 12359, 243, 1458, "Code",ExpressionUUID->"68cb701b-960c-45bb-abdd-8dddbd0dc606"],
+Cell[17118, 373, 276, 6, 33, "Text",ExpressionUUID->"af725184-d64d-418e-af82-ac5f6b4b6aca"],
+Cell[CellGroupData[{
+Cell[17419, 383, 393, 6, 30, "Input",ExpressionUUID->"5d1a53c1-0835-42a1-b392-fe09a86ce742"],
+Cell[17815, 391, 577, 11, 36, "Output",ExpressionUUID->"1befdf2c-0f12-4f0f-8352-47012ff84d32"]
 }, Open  ]]
 }
 ]
