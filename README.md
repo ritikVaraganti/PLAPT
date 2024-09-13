@@ -1,154 +1,110 @@
-# **PLAPT: Protein-Ligand Binding Affinity Prediction Using Pretrained Transformers**
+# PLAPT: Protein-Ligand Affinity Prediction Using Pretrained Transformers
 
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/plapt-protein-ligand-binding-affinity/protein-ligand-affinity-prediction-on-csar)](https://paperswithcode.com/sota/protein-ligand-affinity-prediction-on-csar?p=plapt-protein-ligand-binding-affinity)
-
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/plapt-protein-ligand-binding-affinity/protein-ligand-affinity-prediction-on-pdbbind)](https://paperswithcode.com/sota/protein-ligand-affinity-prediction-on-pdbbind?p=plapt-protein-ligand-binding-affinity)
 
-This is the official code repository for PLAPT, a state-of-the-art protein-ligand binding affinity predictor. [Preprint](https://doi.org/10.1101/2024.02.08.575577)
+PLAPT is a state-of-the-art tool for predicting protein-ligand binding affinity, crucial for accelerating drug discovery processes. Our model leverages transfer learning from pretrained transformers like ProtBERT and ChemBERTa to achieve high accuracy while requiring minimal computational resources.
 
+## Key Features
 
+- **Efficient Processing**: Extremely lightweight prediction module allows for incredibly high throughput affinity prediction with cached embeddings.
+- **Transfer Learning**: Uses pretrained models to extract rich protein and molecule features.
+- **Versatile Usage**: Uses just 1D protein and ligand sequences as strings for input. Has a command-line interface and Python API for easy integration into various workflows.
+- **High Accuracy**: Achieves top performance on benchmark datasets.
 
+[Read our preprint](https://doi.org/10.1101/2024.02.08.575577)
 
-### Abstract
-Understanding protein-ligand binding affinity is crucial for drug discovery, enabling the identification of promising drug candidates efficiently. We introduce PLAPT, a novel model leveraging transfer learning from pre-trained transformers like ProtBERT and ChemBERTa to predict binding affinities with high accuracy. Our method processes one-dimensional protein and ligand sequences, leveraging a branching neural network architecture for feature integration and affinity estimation. We demonstrate PLAPT's superior performance through validation on multiple datasets, achieving state-of-the-art results while requiring significantly less computational resources for training compared to existing models. Our findings indicate that PLAPT offers a highly effective and accessible approach for accelerating drug discovery efforts.
+## Model Architecture
+
+PLAPT uses a novel branching neural network architecture that efficiently integrates features from protein and ligand encoders to estimate binding affinities:
 
 ![PLAPT Architecture](https://github.com/trrt-good/WELP-PLAPT/blob/main/Diagrams/PLAPT.png)
 
----
-# Usage
----
-## Plapt CLI
+This architecture allows PLAPT to process complex molecular information effectively and highly efficiently when coupled with caching.
 
-Plapt CLI is a command-line interface for the Plapt Python package, designed for predicting affinities using sequences and SMILES strings. This tool is user-friendly and offers flexibility in output formats and file handling.
-
-### Prerequisites
-
-Before using Plapt CLI, you need to have the following installed:
-- Python (Download and install from [python.org](https://www.python.org/))
-- Git (Download and install from [git-scm.com](https://git-scm.com/)) - Alternatively, you can download the repository as a ZIP file.
+## Quick Start
 
 ### Installation
 
-To install Plapt CLI, you can clone the repository from GitHub:
+1. Clone the repository:
+   ```
+   git clone https://github.com/trrt-good/WELP-PLAPT.git
+   cd WELP-PLAPT
+   ```
+
+2. Install dependencies:
+   ```
+   pip install -r requirements.txt
+   ```
+
+### Using PLAPT
+
+PLAPT can be used via command line or integrated into Python scripts.
+
+#### Command Line Interface
+
+Predict affinity for a single protein and multiple ligands:
 
 ```bash
-git clone https://github.com/trrt-good/WELP-PLAPT.git
-cd WELP-PLAPT
+python plapt_cli.py -p "SEQUENCE" -m "SMILES1" "SMILES2" "SMILES3"
 ```
 
-If you prefer not to use Git, download the ZIP file of the repository and extract it to a desired location.
-
-Once you have the repository on your local machine, install the required dependencies:
+Predict affinities for multiple protein-ligand pairs:
 
 ```bash
-pip install -r requirements.txt
+python plapt_cli.py -p "SEQUENCE1" "SEQUENCE2" -m "SMILES1" "SMILES2"
 ```
 
-(Optional) If you are using a virtual environment, activate it before installing the dependencies:
+Use files for input:
 
 ```bash
-source /path/to/your/venv/bin/activate
+python plapt_cli.py -p proteins.txt -m molecules.txt
 ```
 
-### Running the Script
+Save results to a file:
 
 ```bash
-python plapt_cli.py -s SEQ1 SEQ2 ... -m SMILES1 SMILES2 ... -o OUTPUT_FILE -f FORMAT
+python plapt_cli.py -p "SEQUENCE" -m "SMILES1" "SMILES2" -o results.json
 ```
 
-- `-s`: Followed by one or more sequences.
-- `-m`: Followed by one or more SMILES strings.
-- `-o`: (Optional) Path to the output file. If omitted, results are printed to the console.
-- `-f`: (Optional) Format of the output file (`json` or `csv`). Required if `-o` is used without specifying a file extension.
-
-#### Examples
-
-- To print results to the console:
-
-  ```bash
-  python plapt_cli.py -s SEQ1 SEQ2 -m SMILES1 SMILES2
-  ```
-
-- To save results to a JSON file:
-
-  ```bash
-  python plapt_cli.py -s SEQ1 SEQ2 -m SMILES1 SMILES2 -o results.json
-  ```
-
-- To save results to a CSV file:
-
-  ```bash
-  python plapt_cli.py -s SEQ1 SEQ2 -m SMILES1 SMILES2 -o results.csv
-  ```
-
-- To specify the format explicitly:
-
-  ```bash
-  python plapt_cli.py -s SEQ1 SEQ2 -m SMILES1 SMILES2 -o results -f json
-  ```
-
-- If `-o` is omitted, results are printed to the console.
-
----
-
-## Using Plapt Directly in Python
-
-Apart from the command-line interface, Plapt can also be used directly in Python scripts. This allows for more flexibility and integration into larger Python projects or workflows.
-
-### Installation
-
-Ensure you have followed the installation steps mentioned in the earlier section to set up the Plapt environment and dependencies. 
-
-### Basic Usage
-
-To use Plapt in a Python script, you need to import the `Plapt` class and then create an instance of it. You can then call its methods to predict affinities.
-
-#### Importing and Initializing Plapt
-
-``` python
-# First, import the Plapt class from the package, making sure you are working in the same directory as the plapt.py file:
-from plapt import Plapt
-
-# create an instance of the Plapt class. For basic usage, no initialization parameters are needed:
-plapt = Plapt()
-```
-
-#### Running Predictions
-After initializing the `Plapt` object, you can use it to predict affinities. Here's an example of how to do it:
+#### Python Integration
 
 ```python
-sequences = ["APTAPSIDMYGSNNL", "PIFLNVLEAIEPGVVC"]
-smiles = ["NC(=O)[C@H](CCC(=O)O)", "NC(=[NH2+])c1ccccc1"]
-
-results = plapt.predict_affinity(sequences, smiles)
-print(results)
-```
-output:
-```
-[{'neg_log10_affinity_M': 4.38891527161495, 'affinity_uM': 40.839905489541835}, {'neg_log10_affinity_M': 4.196127195169673, 'affinity_uM': 63.66090450080189}]
-```
-The outputted json can subsequently used for other tasks.
-
-### Advanced Usage
-
-Plapt can be initialized with specialized parameters, such as the prediction module used, caching, or the inference device. Example below:
-``` python
 from plapt import Plapt
 
-# create an instance of the Plapt class with other parameters:
-plapt = Plapt(
-    prediction_module_path="models/predictionModule.onnx",  # For using a different prediction module. This is set to "models/predictionModule.onnx" by default. 
-    caching=True,  # Enable or disable caching. Enabled by default.
-    device="cuda"   # Set the computation device ("cuda" for GPU or "cpu" for CPU). If cuda isn't available on your system, it will fallback to "cpu" automatically.
-)
+plapt = Plapt()
+
+# Predict affinity for a single protein and multiple ligands
+protein = "MKTVRQERLKSIVRILERSKEPVSGAQLAEELSVSRQVIVQDIAYLRSLGYNIVATPRGYVLAGG"
+molecules = ["CC1=CC=C(C=C1)C2=CC(=NN2C3=CC=C(C=C3)S(=O)(=O)N)C(F)(F)F", 
+             "COC1=CC=C(C=C1)C2=CC(=NN2C3=CC=C(C=C3)S(=O)(=O)N)C(F)(F)F"]
+
+results = plapt.score_candidates(protein, molecules)
+print(results)
+
+# Predict affinities for multiple protein-ligand pairs
+proteins = ["SEQUENCE1", "SEQUENCE2"]
+molecules = ["SMILES1", "SMILES2"]
+
+results = plapt.predict_affinity(proteins, molecules)
+print(results)
 ```
-Each option can be specified seperately (e.g., `plapt = Plapt(caching=False)` if you would like to disable caching. 
 
----
+## Citation
 
+If you use PLAPT in your research, please cite our paper:
 
-#### Data Preparation and Encoding
-We source protein-ligand pairs and their corresponding affinity values from an open-source binding affinity dataset on hugginface, [binding_affinity](https://huggingface.co/datasets/jglaser/binding_affinity). We then used ProtBERT and ChemBERTa for encoding proteins and ligands respectively, giving us high quality vector-space representations. The encoding process is detailed in the `encoding.ipynb` notebook. The dataset, already encoded, is available on our [Google Drive](https://drive.google.com/drive/folders/1e-ujgHx5bW0JKxSZY5u34As77o4-IIFs?usp=sharing) for ease of access and use.
+```
+@misc{rose2023plapt,
+  title={PLAPT: Protein-Ligand Binding Affinity Prediction Using Pretrained Transformers},
+  author={Tyler Rose, Nicolò Monti, Navvye Anand, Tianyu Shen},
+  journal={bioRxiv},
+  year={2023},
+  url={https://www.biorxiv.org/content/10.1101/2024.02.08.575577v3},
+  doi={10.1101/2024.02.08.575577}
+}
+```
 
-#### Importing Encoders and Running the Notebook
-For users to import the encoders and run the Wolfram notebook (`WL Notebooks/FinalEssay.nb`), we provide the `encoders_to_onnx.ipynb` notebook. This ensures that users can replicate our encoding process and utilize the full capabilities of PLAPT.
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
