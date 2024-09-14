@@ -27,14 +27,27 @@ This architecture allows PLAPT to process complex molecular information effectiv
 ### Installation
 
 1. Clone the repository:
-   ```
+   ```bash
    git clone https://github.com/trrt-good/WELP-PLAPT.git
    cd WELP-PLAPT
    ```
 
-2. Install dependencies:
+2. (Optional) Use virtual environment:
+   ```bash
+   python3 -m venv env
    ```
-   pip install -r requirements.txt
+   For macos or linux, run:
+   ```bash
+   source env/bin/activate
+   ```
+   For windows:
+   ```bash
+   env\Scripts\activate
+   ```
+   
+4. Install dependencies:
+   ```bash
+   pip3 install -r requirements.txt
    ```
 
 ### Using PLAPT
@@ -46,25 +59,25 @@ PLAPT can be used via command line or integrated into Python scripts.
 Predict affinity for a single protein and multiple ligands:
 
 ```bash
-python plapt_cli.py -p "SEQUENCE" -m "SMILES1" "SMILES2" "SMILES3"
+python3 plapt_cli.py -p "SEQUENCE" -m "SMILES1" "SMILES2" "SMILES3"
 ```
 
 Predict affinities for multiple protein-ligand pairs:
 
 ```bash
-python plapt_cli.py -p "SEQUENCE1" "SEQUENCE2" -m "SMILES1" "SMILES2"
+python3 plapt_cli.py -p "SEQUENCE1" "SEQUENCE2" -m "SMILES1" "SMILES2"
 ```
 
 Use files for input:
 
 ```bash
-python plapt_cli.py -p proteins.txt -m molecules.txt
+python3 plapt_cli.py -p proteins.txt -m molecules.txt
 ```
 
 Save results to a file:
 
 ```bash
-python plapt_cli.py -p "SEQUENCE" -m "SMILES1" "SMILES2" -o results.json
+python3 plapt_cli.py -p "SEQUENCE" -m "SMILES1" "SMILES2" -o results.json
 ```
 
 #### Python Integration
