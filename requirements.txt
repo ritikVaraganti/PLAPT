@@ -1,4 +1,7 @@
 torch
 transformers
+pandas
+scipy
 onnxruntime
 numpy
+diskcache
