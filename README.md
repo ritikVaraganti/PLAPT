@@ -103,6 +103,17 @@ results = plapt.predict_affinity(proteins, molecules)
 print(results)
 ```
 
+## Used by
+
+PLAPT has been used in the following research:
+
+```
+1. López-Cortés, A., Cabrera-Andrade, A., Echeverría-Garcés, G. et al. Unraveling druggable cancer-driving proteins and targeted drugs using artificial intelligence and multi-omics analyses. Sci Rep 14, 19359 (2024). https://doi.org/10.1038/s41598-024-68565-7
+```
+
+If you've used PLAPT in your research, please let us know!
+
+
 ## Citation
 
 If you use PLAPT in your research, please cite our paper:
@@ -117,6 +128,11 @@ If you use PLAPT in your research, please cite our paper:
   doi={10.1101/2024.02.08.575577}
 }
 ```
+
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## License
 
