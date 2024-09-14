@@ -122,7 +122,7 @@ class Plapt:
         for batch in self.make_batches(range(len(mol_smiles)), affinity_batch_size):
             mol_batch = mol_encodings[batch]
             repeated_target = target_encoding.repeat(len(batch), 1)
-            features = torch.cat((repeated_target, mol_batch), dim=1).numpy()
+            features = torch.cat((repeated_target, mol_batch), dim=1).cpu().numpy()
             batch_affinities = self.prediction_module.predict(features)
             affinities.extend(batch_affinities)
 

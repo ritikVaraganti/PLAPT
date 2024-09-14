@@ -54,9 +54,9 @@ def main():
         proteins = process_input(args.proteins)
         
         if len(proteins) == 1:
-            results = plapt.score_candidates(proteins[0], molecules, batch_size=args.batch_size)
+            results = plapt.score_candidates(proteins[0], molecules)
         elif len(proteins) == len(molecules):
-            results = plapt.predict_affinity(proteins, molecules, batch_size=args.batch_size)
+            results = plapt.predict_affinity(proteins, molecules)
         else:
             print("Error: The number of proteins must be either 1 or equal to the number of molecules.")
             sys.exit(1)
