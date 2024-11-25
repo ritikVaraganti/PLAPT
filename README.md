@@ -26,6 +26,8 @@ This architecture allows PLAPT to process complex molecular information effectiv
 
 ### Installation
 
+For extra assistance installing please see our [Bindwell AI](https://chatgpt.com/share/6744e111-b818-8008-be2b-a55556aba9b6)
+
 1. Clone the repository:
    ```bash
    git clone https://github.com/trrt-good/WELP-PLAPT.git
