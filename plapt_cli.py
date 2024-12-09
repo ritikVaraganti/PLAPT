@@ -24,31 +24,51 @@ def process_input(input_data: List[str]) -> List[str]:
         return read_file(input_data[0])
     return input_data
 
-def write_output(results: List[dict], output_path: str):
+def write_output(results: List[dict], output_path: str, proteins: List[str], molecules: List[str]):
+    # Create list of results with protein and molecule information
+    full_results = []
+    for i, result in enumerate(results):
+        full_result = {
+            'protein': proteins[0] if len(proteins) == 1 else proteins[i],
+            'molecule': molecules[i],
+            'neg_log10_affinity_M': result['neg_log10_affinity_M'],
+            'affinity_uM': result['affinity_uM']
+        }
+        full_results.append(full_result)
+
     if output_path == 'stdout':
-        for result in results:
-            print(f"neg_log10_affinity_M: {result['neg_log10_affinity_M']:.4f}, affinity_uM: {result['affinity_uM']:.4f}")
+        for result in full_results:
+            print(f"protein: {result['protein']}, molecule: {result['molecule']}, "
+                  f"neg_log10_affinity_M: {result['neg_log10_affinity_M']:.4f}, "
+                  f"affinity_uM: {result['affinity_uM']:.4f}")
     else:
         if output_path.endswith('.json'):
             with open(output_path, 'w') as f:
-                json.dump(results, f, indent=4)
+                json.dump(full_results, f, indent=4)
         elif output_path.endswith('.csv'):
             with open(output_path, 'w', newline='') as f:
                 writer = csv.writer(f)
-                writer.writerow(['neg_log10_affinity_M', 'affinity_uM'])  # header row
-                for result in results:
-                    writer.writerow([result['neg_log10_affinity_M'], result['affinity_uM']])
+                writer.writerow(['protein', 'molecule', 'neg_log10_affinity_M', 'affinity_uM'])  # header row
+                for result in full_results:
+                    writer.writerow([
+                        result['protein'],
+                        result['molecule'],
+                        result['neg_log10_affinity_M'],
+                        result['affinity_uM']
+                    ])
         else:
             with open(output_path, 'w') as f:
-                for result in results:
-                    f.write(f"neg_log10_affinity_M: {result['neg_log10_affinity_M']:.4f}, affinity_uM: {result['affinity_uM']:.4f}\n")
+                for result in full_results:
+                    f.write(f"protein: {result['protein']}, molecule: {result['molecule']}, "
+                           f"neg_log10_affinity_M: {result['neg_log10_affinity_M']:.4f}, "
+                           f"affinity_uM: {result['affinity_uM']:.4f}\n")
 
 def main():
     args = parse_arguments()
     
     molecules = process_input(args.molecules)
     
-    plapt = Plapt()
+    plapt = Plapt(use_tqdm=True)
     
     if args.proteins:
         proteins = process_input(args.proteins)
@@ -64,7 +84,7 @@ def main():
         print("Error: At least one protein sequence must be provided.")
         sys.exit(1)
     
-    write_output(results, args.output)
+    write_output(results, args.output, proteins, molecules)
 
 if __name__ == "__main__":
     main()
