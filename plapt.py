@@ -5,6 +5,8 @@ import onnxruntime
 import numpy as np
 from typing import List, Dict, Union
 from diskcache import Cache
+from tqdm import tqdm
+from contextlib import contextmanager, nullcontext
 
 class PredictionModule:
     def __init__(self, model_path: str = "models/affinity_predictor.onnx"):
@@ -29,8 +31,9 @@ class PredictionModule:
         return affinities
 
 class Plapt:
-    def __init__(self, prediction_module_path: str = "models/affinity_predictor.onnx", device: str = 'cuda', cache_dir: str = './embedding_cache'):
+    def __init__(self, prediction_module_path: str = "models/affinity_predictor.onnx", device: str = 'cuda', cache_dir: str = './embedding_cache', use_tqdm: bool = False):
         self.device = torch.device(device if torch.cuda.is_available() else 'cpu')
+        self.use_tqdm = use_tqdm
         
         self.prot_tokenizer = BertTokenizer.from_pretrained("Rostlab/prot_bert", do_lower_case=False)
         self.prot_encoder = BertModel.from_pretrained("Rostlab/prot_bert").to(self.device)
@@ -40,6 +43,14 @@ class Plapt:
         
         self.prediction_module = PredictionModule(prediction_module_path)
         self.cache = Cache(cache_dir)
+
+    @contextmanager
+    def progress_bar(self, total: int, desc: str):
+        if self.use_tqdm:
+            with tqdm(total=total, desc=desc) as pbar:
+                yield pbar
+        else:
+            yield nullcontext()
 
     @staticmethod
     def preprocess_sequence(seq: str) -> str:
@@ -54,39 +65,45 @@ class Plapt:
 
     def encode_molecules(self, mol_smiles: List[str], batch_size: int) -> torch.Tensor:
         embeddings = []
-        for batch in self.make_batches(mol_smiles, batch_size):
-            cached_embeddings = [self.cache.get(smiles) for smiles in batch]
-            uncached_indices = [i for i, emb in enumerate(cached_embeddings) if emb is None]
-            
-            if uncached_indices:
-                uncached_smiles = [batch[i] for i in uncached_indices]
-                tokens = self.tokenize_molecule(uncached_smiles)
-                with torch.no_grad():
-                    new_embeddings = self.mol_encoder(**tokens.to(self.device)).pooler_output.cpu()
-                for i, emb in zip(uncached_indices, new_embeddings):
-                    cached_embeddings[i] = emb
-                    self.cache[batch[i]] = emb
-            
-            embeddings.extend(cached_embeddings)
+        with self.progress_bar(len(mol_smiles), "Encoding molecules") as pbar:
+            for batch in self.make_batches(mol_smiles, batch_size):
+                cached_embeddings = [self.cache.get(smiles) for smiles in batch]
+                uncached_indices = [i for i, emb in enumerate(cached_embeddings) if emb is None]
+                
+                if uncached_indices:
+                    uncached_smiles = [batch[i] for i in uncached_indices]
+                    tokens = self.tokenize_molecule(uncached_smiles)
+                    with torch.no_grad():
+                        new_embeddings = self.mol_encoder(**tokens.to(self.device)).pooler_output.cpu()
+                    for i, emb in zip(uncached_indices, new_embeddings):
+                        cached_embeddings[i] = emb
+                        self.cache[batch[i]] = emb
+                
+                embeddings.extend(cached_embeddings)
+                if self.use_tqdm:
+                    pbar.update(len(batch))
         
         return torch.stack(embeddings).to(self.device)
 
     def encode_proteins(self, prot_seqs: List[str], batch_size: int) -> torch.Tensor:
         embeddings = []
-        for batch in self.make_batches(prot_seqs, batch_size):
-            cached_embeddings = [self.cache.get(seq) for seq in batch]
-            uncached_indices = [i for i, emb in enumerate(cached_embeddings) if emb is None]
-            
-            if uncached_indices:
-                uncached_seqs = [batch[i] for i in uncached_indices]
-                tokens = self.tokenize_protein(uncached_seqs)
-                with torch.no_grad():
-                    new_embeddings = self.prot_encoder(**tokens.to(self.device)).pooler_output.cpu()
-                for i, emb in zip(uncached_indices, new_embeddings):
-                    cached_embeddings[i] = emb
-                    self.cache[batch[i]] = emb
-             
-            embeddings.extend(cached_embeddings)
+        with self.progress_bar(len(prot_seqs), "Encoding proteins") as pbar:
+            for batch in self.make_batches(prot_seqs, batch_size):
+                cached_embeddings = [self.cache.get(seq) for seq in batch]
+                uncached_indices = [i for i, emb in enumerate(cached_embeddings) if emb is None]
+                
+                if uncached_indices:
+                    uncached_seqs = [batch[i] for i in uncached_indices]
+                    tokens = self.tokenize_protein(uncached_seqs)
+                    with torch.no_grad():
+                        new_embeddings = self.prot_encoder(**tokens.to(self.device)).pooler_output.cpu()
+                    for i, emb in zip(uncached_indices, new_embeddings):
+                        cached_embeddings[i] = emb
+                        self.cache[batch[i]] = emb
+                
+                embeddings.extend(cached_embeddings)
+                if self.use_tqdm:
+                    pbar.update(len(batch))
         
         return torch.stack(embeddings).to(self.device)
 
@@ -104,13 +121,15 @@ class Plapt:
         mol_encodings = self.encode_molecules(mol_smiles, mol_batch_size)
 
         affinities = []
-        for batch in self.make_batches(range(len(prot_seqs)), affinity_batch_size):
-            prot_batch = prot_encodings[batch]
-            mol_batch = mol_encodings[batch]
-            features = torch.cat((prot_batch, mol_batch), dim=1).cpu().numpy()
-            print(len(features))
-            batch_affinities = self.prediction_module.predict(features)
-            affinities.extend(batch_affinities)
+        with self.progress_bar(len(prot_seqs), "Predicting affinities") as pbar:
+            for batch in self.make_batches(range(len(prot_seqs)), affinity_batch_size):
+                prot_batch = prot_encodings[batch]
+                mol_batch = mol_encodings[batch]
+                features = torch.cat((prot_batch, mol_batch), dim=1).cpu().numpy()
+                batch_affinities = self.prediction_module.predict(features)
+                affinities.extend(batch_affinities)
+                if self.use_tqdm:
+                    pbar.update(len(batch))
 
         return affinities
 
@@ -119,15 +138,18 @@ class Plapt:
         mol_encodings = self.encode_molecules(mol_smiles, mol_batch_size)
 
         affinities = []
-        for batch in self.make_batches(range(len(mol_smiles)), affinity_batch_size):
-            mol_batch = mol_encodings[batch]
-            repeated_target = target_encoding.repeat(len(batch), 1)
-            features = torch.cat((repeated_target, mol_batch), dim=1).cpu().numpy()
-            batch_affinities = self.prediction_module.predict(features)
-            affinities.extend(batch_affinities)
+        with self.progress_bar(len(mol_smiles), "Scoring candidates") as pbar:
+            for batch in self.make_batches(range(len(mol_smiles)), affinity_batch_size):
+                mol_batch = mol_encodings[batch]
+                repeated_target = target_encoding.repeat(len(batch), 1)
+                features = torch.cat((repeated_target, mol_batch), dim=1).cpu().numpy()
+                batch_affinities = self.prediction_module.predict(features)
+                affinities.extend(batch_affinities)
+                if self.use_tqdm:
+                    pbar.update(len(batch))
 
         return affinities
-
+    
 # Example usage
 if __name__ == "__main__":
     plapt = Plapt()
@@ -139,7 +161,7 @@ if __name__ == "__main__":
                  "COC1=CC=C(C=C1)C2=CC(=NN2C3=CC=C(C=C3)S(=O)(=O)N)C(F)(F)F"]
     
     results = plapt.predict_affinity(proteins, molecules, prot_batch_size=2, mol_batch_size=16, affinity_batch_size=128)
-    print("Predict Affinity Results:", results)
+    print("\nPredict Affinity Results:", results)
     
     # Example for score_candidates
     target_protein = "MKTVRQERLKSIVRILERSKEPVSGAQLAEELSVSRQVIVQDIAYLRSLGYNIVATPRGYVLAGG"
@@ -148,4 +170,4 @@ if __name__ == "__main__":
                            "CC1=CC=C(C=C1)C2=CC(=NN2C3=CC=C(C=C3)S(=O)(=O)N)C(F)(F)F"]
     
     scores = plapt.score_candidates(target_protein, candidate_molecules, mol_batch_size=16, affinity_batch_size=128)
-    print("Score Candidates Results:", scores)
+    print("\nScore Candidates Results:", scores) 
