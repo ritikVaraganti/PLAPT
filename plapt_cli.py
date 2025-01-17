@@ -8,7 +8,7 @@ import warnings
 from pathlib import Path
 from Bio import SeqIO
 from Bio.PDB import *
-from Bio.PDB.Polypeptide import three_to_one, is_aa
+from Bio.PDB.Polypeptide import three_to_index, is_aa
 from rdkit import Chem
 import pandas as pd
 import re
@@ -35,7 +35,7 @@ class ProteinParser:
                 for residue in chain:
                     if is_aa(residue.get_resname(), standard=True):
                         try:
-                            sequence += three_to_one(residue.get_resname())
+                            sequence += three_to_index(residue.get_resname())
                         except KeyError:
                             print(f"Warning: Unknown amino acid {residue.get_resname()}", file=sys.stderr)
         
@@ -65,7 +65,7 @@ class ProteinParser:
                         for atom in mol.GetAtoms():
                             info = atom.GetPDBResidueInfo()
                             if info and is_aa(info.GetResidueName(), standard=True):
-                                residues.append(three_to_one(info.GetResidueName()))
+                                residues.append(three_to_index(info.GetResidueName()))
                         sequence = ''.join(residues)
                     except:
                         continue
@@ -200,7 +200,7 @@ def main():
             raise ValueError("Number of proteins and molecules must match or one must be singular")
         
         # 3. Run inference
-        plapt = Plapt(use_tqdm=True)
+        plapt = Plapt()
         predictions = plapt.predict_affinity(proteins, molecules)
         
         # 4. Format results
