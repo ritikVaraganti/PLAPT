@@ -30,7 +30,7 @@ For extra assistance installing please see our [Bindwell AI]([https://chatgpt.co
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/trrt-good/WELP-PLAPT.git
+   git clone https://github.com/Bindwell/PLAPT.git
    cd PLAPT
    ```
 
