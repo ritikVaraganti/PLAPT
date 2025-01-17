@@ -8,7 +8,7 @@ import warnings
 from pathlib import Path
 from Bio import SeqIO
 from Bio.PDB import *
-from Bio.PDB.Polypeptide import three_to_index, is_aa
+from Bio.PDB.Polypeptide import three_to_index, is_aa, index_to_one
 from rdkit import Chem
 import pandas as pd
 import re
@@ -35,7 +35,7 @@ class ProteinParser:
                 for residue in chain:
                     if is_aa(residue.get_resname(), standard=True):
                         try:
-                            sequence += three_to_index(residue.get_resname())
+                            sequence += index_to_one(three_to_index(residue.get_resname()))
                         except KeyError:
                             print(f"Warning: Unknown amino acid {residue.get_resname()}", file=sys.stderr)
         
@@ -65,7 +65,7 @@ class ProteinParser:
                         for atom in mol.GetAtoms():
                             info = atom.GetPDBResidueInfo()
                             if info and is_aa(info.GetResidueName(), standard=True):
-                                residues.append(three_to_index(info.GetResidueName()))
+                                residues.append(three_to_one(info.GetResidueName()))
                         sequence = ''.join(residues)
                     except:
                         continue
@@ -128,13 +128,29 @@ class MoleculeParser:
 
 def parse_input(input_data: Union[str, List[str]], parser_class) -> List[str]:
     """Convert input data to list of sequences/SMILES using appropriate parser."""
-    if isinstance(input_data, str) and Path(input_data).is_file():
-        ext = Path(input_data).suffix.lower()
-        parser_method = getattr(parser_class, f"from_{ext[1:]}", None)
-        if parser_method:
-            return parser_method(input_data)
-        raise ValueError(f"Unsupported file extension: {ext}")
-    return input_data if isinstance(input_data, list) else [input_data]
+    # Handle list input (e.g. from command line arguments)
+    if isinstance(input_data, list):
+        # If any item is a file path, try to parse it
+        if any(Path(item).is_file() for item in input_data):
+            if len(input_data) > 1:
+                raise ValueError("When using file input, please provide only one file")
+            return parse_input(input_data[0], parser_class)
+        # Otherwise treat as direct sequences/SMILES
+        return input_data
+    
+    # Handle single string input
+    if isinstance(input_data, str):
+        # If it's a file path, parse it based on extension
+        if Path(input_data).is_file():
+            ext = Path(input_data).suffix.lower()
+            parser_method = getattr(parser_class, f"from_{ext[1:]}", None)
+            if parser_method:
+                return parser_method(input_data)
+            raise ValueError(f"Unsupported file extension: {ext}")
+        # Otherwise treat as direct sequence/SMILES
+        return [input_data]
+    
+    raise ValueError("Input must be a string or list of strings")
 
 def format_results(predictions: List[Dict], proteins: List[str], molecules: List[str]) -> List[Dict]:
     """Format prediction results with input sequences."""
@@ -200,7 +216,7 @@ def main():
             raise ValueError("Number of proteins and molecules must match or one must be singular")
         
         # 3. Run inference
-        plapt = Plapt()
+        plapt = Plapt(use_tqdm=True)
         predictions = plapt.predict_affinity(proteins, molecules)
         
         # 4. Format results
@@ -215,3 +231,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
