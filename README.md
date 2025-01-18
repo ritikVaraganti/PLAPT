@@ -30,11 +30,19 @@ For extra assistance installing please see our [Bindwell AI]([https://chatgpt.co
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/Bindwell/PLAPT.git
-   cd PLAPT
+   git clone https://github.com/trrt-good/WELP-PLAPT.git
+   cd WELP-PLAPT
    ```
 
-2. (Optional) Use virtual environment:
+2. Choose one of the following installation methods:
+
+   #### Option A: Using Conda (Recommended)
+   ```bash
+   conda env create -f environment.yml
+   conda activate plapt
+   ```
+
+   #### Option B: Using Python Virtual Environment
    ```bash
    python3 -m venv env
    ```
@@ -46,8 +54,7 @@ For extra assistance installing please see our [Bindwell AI]([https://chatgpt.co
    ```bash
    env\Scripts\activate
    ```
-   
-4. Install dependencies:
+   Then install dependencies:
    ```bash
    pip3 install -r requirements.txt
    ```
